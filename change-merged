@@ -1,0 +1,36 @@
+#!/bin/bash
+while [[ $# > 1 ]]
+do
+key="$1"
+
+case $key in
+    --project)
+    HOOK_PROJECT="$2"
+    shift
+    ;;
+    --branch)
+    HOOK_BRANCH="$2"
+    shift
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift
+done
+
+while read -r remote_project remote_branch remote_url
+do
+  if [[ ${HOOK_PROJECT} == ${remote_project} ]] && [[ ${HOOK_BRANCH} == ${remote_branch} ]]
+  then
+    cd ${GIT_DIR}
+    GIT_OUTPUT="$((git push ${remote_url} ${BRANCH}) 2>&1)"
+    if [[ $? -eq 0 ]]
+    then
+        STATUS="SUCCESS"
+    else
+        STATUS="ERROR  "
+    fi
+    echo "["$(date '+%Y-%m-%d %H:%M:%S')"]" ${STATUS} ${HOOK_PROJECT} ${HOOK_BRANCH} ${GIT_OUTPUT} >> ${GERRIT_SITE}/logs/change-merged_log
+  fi
+done < ${GERRIT_SITE}/etc/client_replication_remotes
