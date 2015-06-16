@@ -8,9 +8,10 @@ android {
         }
     }
     buildTypes {
-    jenkinsRelease {
-        minifyEnabled true
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        signingConfig signingConfigs.jenkinsReleaseConfig
+        jenkinsRelease {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.jenkinsReleaseConfig
+        }
     }
 }
